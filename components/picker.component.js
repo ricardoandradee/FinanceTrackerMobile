@@ -8,20 +8,10 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function AsyncStoragePicker(props) {
+    const { dataSource } = props;
+    const state = { values: dataSource, selectedValue: '' };
     const initialValue = { label: '', value: '' };
     const [pickerValue, setPickerValue] = React.useState(initialValue);
-    const [state, setState] = React.useState({ values:[], selectedValue: '' });
-    const { storageKey } = props;
-
-    useEffect(async() => {
-        await AsyncStorage.getItem(storageKey)
-        .then(response => {      
-            if (response !== null) {
-                var parsedValue = JSON.parse(response);
-                setState({values:parsedValue});
-            }
-        });
-    }, []);
 
     return (
         <Picker

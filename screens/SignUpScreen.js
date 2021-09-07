@@ -19,15 +19,19 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 
 import { AsyncStoragePicker } from '../components/picker.component';
-
-import {currencies} from '../data/currency.data';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { AuthContext } from '../contexts/auth.context';
 
 const validator = require('validator');
 
-const SignInScreen = ({navigation}) => {    
+import TimeZoneService from '../services/timezone.service';
+import CurrencyService from '../services/currency.service';
+
+const SignInScreen = ({navigation}) => {
+    
+  const [timezone, setTimezone] = React.useState([]);
+  const [currency, setCurrency] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
   const {state, signUp} = React.useContext(AuthContext);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
@@ -53,50 +57,50 @@ const SignInScreen = ({navigation}) => {
         && data.isPasswordRuleMatched;
     }
 
-    const emailChanged = (val) => { 
+    const emailChanged = (email) => { 
         setData({
             ...data,
-            email: val,
-            isEmailValid: validator.isEmail(val)
+            email: email,
+            isEmailValid: validator.isEmail(email)
         });
     }
 
-    const fullNameChanged = (val) => { 
+    const fullNameChanged = (fullName) => { 
         setData({
             ...data,
-            fullName: val,
-            isFullNameValid: val.length >= 4
+            fullName: fullName,
+            isFullNameValid: fullName.length >= 4
         });
     }
 
-    const currencyChanged = (val) => {
+    const currencyChanged = (currency) => {
         setData({
             ...data,
-            currency: val
+            currency: currency
         });
     }
 
-    const timeZoneChanged = (val) => {
+    const timeZoneChanged = (timeZone) => {
         setData({
             ...data,
-            timeZone: val
+            timeZone: timeZone
         });
     }
 
-    const passwordChanged = (val) => {
+    const passwordChanged = (password) => {
         setData({
             ...data,
-            password: val,
-            passwordsEqual: val === data.confirm_password,
-            isPasswordRuleMatched: passwordRegex.test(val)
+            password: password,
+            passwordsEqual: password === data.confirm_password,
+            isPasswordRuleMatched: passwordRegex.test(password)
         });
     }
 
-    const confirmPasswordChanged = (val) => {
+    const confirmPasswordChanged = (confirm_password) => {
         setData({
             ...data,
-            confirm_password: val,
-            passwordsEqual: val === data.password
+            confirm_password: confirm_password,
+            passwordsEqual: confirm_password === data.password
         });
     }
 
@@ -125,7 +129,51 @@ const SignInScreen = ({navigation}) => {
         };
         signUp(model, () => { navigation.navigate('SignInScreen'); });
     }
+
+    const fetchTimezonesForDropDown = () => {
+        TimeZoneService.fetchTimezones()
+        .then(response => {
+            if (response.status === 200) {
+                let timezones = response.data.map((item, index) => {
+                    return(
+                        { value: item.id, label: item.description }
+                    )
+                });
+                setTimezone(timezones);
+            }
+        }).catch(error => console.log(error));
+    };
+
+    const fetchCurrenciesForDropDown = () => {
+        CurrencyService.fetchCurrencies()
+        .then(response => {
+            if (response.status === 200) {
+                var allCurrencies = response.data.map((item, index) => {
+                    return(
+                        { value: item.id, label: item.code }
+                    )
+                });
+                setCurrency(allCurrencies);
+            }
+        })
+        .catch(error => console.log(error));
+    };
     
+    React.useEffect(() => { 
+        fetchTimezonesForDropDown();
+        fetchCurrenciesForDropDown();
+        setIsLoading(false);
+    }, []);
+    
+
+    if(isLoading) {
+        return(
+        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size="large"/>
+        </View>
+        );
+    }
+
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor='#571089' barStyle="light-content"/>
@@ -271,7 +319,7 @@ const SignInScreen = ({navigation}) => {
             }]}>Currency</Text>
             <View style={styles.action}>                
                 <AsyncStoragePicker
-                    storageKey={'currenciesAvailable'}
+                    dataSource={currency}
                     onPickerChange={currencyChanged}
                 ></AsyncStoragePicker>
             </View>         
@@ -280,13 +328,12 @@ const SignInScreen = ({navigation}) => {
             }]}>Time Zone</Text>
             <View style={styles.action}>                
                 <AsyncStoragePicker
-                    storageKey={'timezonesAvailable'}
+                    dataSource={timezone}
                     onPickerChange={timeZoneChanged}
                 ></AsyncStoragePicker>
             </View>
             <View style={styles.button}>
                 <TouchableOpacity
-                    
                     style={styles.signUp}
                     onPress={() => {isFormValid() && handleSignUp()}}
                 >

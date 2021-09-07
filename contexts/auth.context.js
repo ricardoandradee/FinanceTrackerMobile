@@ -1,10 +1,8 @@
 import createDataContext from './create.data.context';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Alert } from 'react-native';
 
 import AuthService from '../services/auth.service';
-let authService = AuthService.getInstance();
 
 const authReducer = (state, action) => {
     switch(action.type) {
@@ -27,7 +25,7 @@ const authReducer = (state, action) => {
 
 const signUp = dispatch => {
   return (model, callback) => {
-    authService.signUp(model).then((response) => {
+    AuthService.signUp(model).then((response) => {
         if (response.status === 200) {
             const data = response.data;
             if (data.ok) {
@@ -47,7 +45,7 @@ const signUp = dispatch => {
 
 const signIn = dispatch => {
   return (model) => {    
-    authService.signIn(model).then((response) => {
+    AuthService.signIn(model).then((response) => {
         if (response.status === 200) {
             const data = response.data;
             if (data.user.ok) {                

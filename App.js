@@ -14,13 +14,10 @@ import {
 
 import Routes from './routes/main.routes';
 
-import TimeZoneService from './services/timezone.service';
-let timeZoneService = TimeZoneService.getInstance();
-import CurrencyService from './services/currency.service';
-let currencyService = CurrencyService.getInstance();
-
 import { AuthProvider } from './contexts/auth.context.js';
 import { AuthContext } from './contexts/auth.context';
+
+import api from './services/financetracker-api.service';
 
 const App = () => {
   const { state } = React.useContext(AuthContext);
@@ -50,11 +47,6 @@ const App = () => {
   }
 
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
-
-  React.useEffect(() => { 
-    timeZoneService.populateTimezones();
-    currencyService.populateCurrencies();
-  }, []);
 
   return (
     <PaperProvider theme={theme}>

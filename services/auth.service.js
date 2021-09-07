@@ -1,19 +1,13 @@
 import api from './financetracker-api.service';
 
-export default class AuthService {
-    static authServiceInstance = null;
-    static getInstance() {
-        if (AuthService.authServiceInstance == null) {
-            AuthService.authServiceInstance = new AuthService();
-        }
-        return this.authServiceInstance;
+export default class AuthService {     
+    static signIn = (model) => {
+        const url = '/auth/login'; 
+        return api.post(url, model);
     }
 
-    signIn(model) {
-        return api.post('/auth/login', model);
-    }
-
-    signUp(model) {
-        return api.post('/auth/register', model);
+    static signUp = (model) => {
+        const url = '/auth/register'; 
+        return api.post(url, model);
     }
 }
