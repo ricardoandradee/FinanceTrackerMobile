@@ -67,15 +67,7 @@ const SignInScreen = ({navigation}) => {
 
     return (
       <View style={styles.container}>
-      <StatusBar backgroundColor='#ccff33' barStyle="light-content"/>
-        <View style={styles.header}>
-            <Text style={{fontSize: 25, fontWeight: 'bold', color: '#ccff33'}}>
-                Welcome Back,
-            </Text>
-            <Text style={{fontSize: 13, fontWeight: 'bold', color: '#ccff33'}}>
-                Sign in to continue
-            </Text>
-        </View>
+      <StatusBar backgroundColor='#571089' barStyle="light-content"/>
         <Animatable.View 
             animation="fadeInUpBig"
             style={[styles.footer, {
@@ -86,7 +78,7 @@ const SignInScreen = ({navigation}) => {
         <View style={styles.action}>
             <FontAwesome 
                 name="envelope-o"
-                color="#05375a"
+                color="#47126b"
                 size={20}
             />
             <TextInput 
@@ -119,7 +111,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.action}>
                 <Feather 
                     name="lock"
-                    color="#05375a"
+                    color="#47126b"
                     size={20}
                 />
                 <TextInput 
@@ -157,7 +149,7 @@ const SignInScreen = ({navigation}) => {
             }
 
             <TouchableOpacity>
-                <Text style={{color: '#2b9348', marginTop:10}}>Forgot password?</Text>
+                <Text style={{color: '#571089', marginTop:10}}>Forgot password?</Text>
             </TouchableOpacity>
             <View style={styles.button}>
                 <TouchableOpacity
@@ -165,7 +157,7 @@ const SignInScreen = ({navigation}) => {
                     onPress={() => {isFormValid() && handleSignIn()}}
                 >
                 <LinearGradient
-                    colors={isFormValid() ? ['#bfd200', '#2b9348'] : ['#e5e5e5', '#e5e5e5']}
+                    colors={isFormValid() ? ['#571089', '#571089'] : ['#e5e5e5', '#e5e5e5']}
                     style={styles.logIn}
                 >
                     <Text style={[styles.textSign, {
@@ -200,30 +192,22 @@ export default SignInScreen;
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1, 
-      backgroundColor: '#333533'
-    },
-    header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50
+      flex: 1
     },
     footer: {
         flex: Platform.OS === 'ios' ? 10 : 12,
         backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        alignContent: 'center',
         paddingHorizontal: 20,
-        paddingVertical: 30
+        paddingVertical: 150
     },
     text_header: {
-        color: '#ccff33',
+        color: '#571089',
         fontWeight: 'bold',
         fontSize: 22
     },
     label_input: {
-        color: '#05375a',
+        color: '#47126b',
         fontSize: 14
     },
     action: {
@@ -242,7 +226,7 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
-        color: '#05375a',
+        color: '#47126b',
     },
     errorMsg: {
         color: '#FF0000',
@@ -288,6 +272,6 @@ const styles = StyleSheet.create({
         marginRight: 7
     },
     signUp_link: {
-        color: '#2b9348'
+        color: '#571089'
     }
   });

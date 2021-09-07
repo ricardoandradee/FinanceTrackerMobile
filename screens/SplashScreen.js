@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
       height: height_logo
   },
   title: {
-      color: '#05375a',
+      color: '#47126b',
       fontSize: 30,
       fontWeight: 'bold'
   },

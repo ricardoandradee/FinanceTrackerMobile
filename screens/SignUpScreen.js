@@ -29,6 +29,7 @@ const validator = require('validator');
 
 const SignInScreen = ({navigation}) => {    
   const {state, signUp} = React.useContext(AuthContext);
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
 
     const [data, setData] = React.useState({
         email: '',
@@ -40,6 +41,7 @@ const SignInScreen = ({navigation}) => {
         isEmailValid: false,
         isFullNameValid: false,
         passwordsEqual: false,
+        isPasswordRuleMatched: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
     });
@@ -47,7 +49,8 @@ const SignInScreen = ({navigation}) => {
     const isFormValid = () => {
         return data.isEmailValid
         && data.passwordsEqual
-        && data.isFullNameValid;
+        && data.isFullNameValid
+        && data.isPasswordRuleMatched;
     }
 
     const emailChanged = (val) => { 
@@ -84,7 +87,8 @@ const SignInScreen = ({navigation}) => {
         setData({
             ...data,
             password: val,
-            passwordsEqual: val === data.confirm_password
+            passwordsEqual: val === data.confirm_password,
+            isPasswordRuleMatched: passwordRegex.test(val)
         });
     }
 
@@ -124,10 +128,7 @@ const SignInScreen = ({navigation}) => {
     
     return (
       <View style={styles.container}>
-          <StatusBar backgroundColor='#ccff33' barStyle="light-content"/>
-        <View style={styles.header}>
-            <Text style={styles.text_header}>Register Now!</Text>
-        </View>
+        <StatusBar backgroundColor='#571089' barStyle="light-content"/>
         <Animatable.View 
             animation="fadeInUpBig"
             style={styles.footer}
@@ -137,7 +138,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.action}>
                 <FontAwesome 
                     name="envelope-o"
-                    color="#05375a"
+                    color="#47126b"
                     size={18}
                 />
                 <TextInput 
@@ -170,7 +171,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.action}>
                 <FontAwesome 
                     name="user-o"
-                    color="#05375a"
+                    color="#47126b"
                     size={18}
                 />
                 <TextInput 
@@ -192,7 +193,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.action}>
                 <Feather 
                     name="lock"
-                    color="#05375a"
+                    color="#47126b"
                     size={18}
                 />
                 <TextInput 
@@ -219,6 +220,13 @@ const SignInScreen = ({navigation}) => {
                     }
                 </TouchableOpacity>
             </View>
+            { data.password && !data.isPasswordRuleMatched ?
+                <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>
+                        Password should be at least 8 characters long, contain upper and lower cased letter and a number.
+                    </Text>
+                </Animatable.View> : null
+            }
 
             <Text style={[styles.label_input, {
                 marginTop: 10
@@ -226,7 +234,7 @@ const SignInScreen = ({navigation}) => {
             <View style={styles.action}>
                 <Feather 
                     name="lock"
-                    color="#05375a"
+                    color="#47126b"
                     size={18}
                 />
                 <TextInput 
@@ -283,7 +291,7 @@ const SignInScreen = ({navigation}) => {
                     onPress={() => {isFormValid() && handleSignUp()}}
                 >
                 <LinearGradient
-                    colors={isFormValid() ? ['#bfd200', '#2b9348'] : ['#e5e5e5', '#e5e5e5']}
+                    colors={isFormValid() ? ['#571089', '#571089'] : ['#e5e5e5', '#e5e5e5']}
                     style={styles.signUp}
                 >
                     <Text style={[styles.textSign, {
@@ -319,30 +327,22 @@ export default SignInScreen;
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1, 
-      backgroundColor: '#333533'
-    },
-    header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50
+      flex: 1
     },
     footer: {
         flex: Platform.OS === 'ios' ? 10 : 12,
         backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        alignContent: 'center',
         paddingHorizontal: 20,
-        paddingVertical: 30
+        paddingVertical: 70
     },
     text_header: {
-        color: '#ccff33',
+        color: '#571089',
         fontWeight: 'bold',
         fontSize: 22
     },
     label_input: {
-        color: '#05375a',
+        color: '#47126b',
         fontSize: 14
     },
     action: {
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         paddingLeft: 10,
-        color: '#05375a',
+        color: '#47126b',
     },
     button: {
         alignItems: 'center',
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
         marginRight: 7
     },
     signUp_link: {
-        color: '#2b9348'
+        color: '#571089'
     },
     view_picker: {
         flex: 1,
