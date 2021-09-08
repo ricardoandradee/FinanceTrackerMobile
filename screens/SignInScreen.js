@@ -62,7 +62,7 @@ const SignInScreen = ({navigation}) => {
 
     const handleSignIn = () => {
         const model = { Email: data.email, Password: data.password };
-        signIn(model)
+        signIn(model);
     }
 
     return (
@@ -85,7 +85,7 @@ const SignInScreen = ({navigation}) => {
                 placeholder="E-mail"
                 style={styles.textInput}
                 autoCapitalize="none"
-                onChangeText={(val) => emailChanged(val)}
+                onChangeText={(email) => emailChanged(email)}
             />
             {data.email && data.isEmailValid ? 
             <Animatable.View
@@ -122,7 +122,7 @@ const SignInScreen = ({navigation}) => {
                         color: colors.text
                     }]}
                     autoCapitalize="none"
-                    onChangeText={(val) => passwordChanged(val)}
+                    onChangeText={(psw) => passwordChanged(psw)}
                 />
                 <TouchableOpacity
                     onPress={updateSecureTextEntry}
@@ -148,7 +148,7 @@ const SignInScreen = ({navigation}) => {
                 </Animatable.View> : null
             }
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
                 <Text style={{color: '#571089', marginTop:10}}>Forgot password?</Text>
             </TouchableOpacity>
             <View style={styles.button}>

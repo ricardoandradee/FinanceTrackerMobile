@@ -10,4 +10,9 @@ export default class AuthService {
         const url = '/auth/register'; 
         return api.post(url, model);
     }
+
+    static sendPasswordResetEmail = (email) => {
+        const url = `/auth/sendpasswordresetemail?email=${email}`; 
+        return api.get(url);
+    }
 }

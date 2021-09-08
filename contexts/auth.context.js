@@ -1,7 +1,5 @@
 import createDataContext from './create.data.context';
-
 import { Alert } from 'react-native';
-
 import AuthService from '../services/auth.service';
 
 const authReducer = (state, action) => {
@@ -21,6 +19,26 @@ const authReducer = (state, action) => {
         default:
           return state;
     }
+};
+
+const sendPasswordResetEmail = dispatch => {
+  return (email, callback) => {
+    AuthService.sendPasswordResetEmail(email).then((response) => {
+        if (response.status === 200) {
+            const data = response.data;
+            if (data.ok) {
+                Alert.alert('Success!', data.data, [{text: 'Okay'}]);
+                callback();
+            } else {
+                Alert.alert('Error!', data.message, [{text: 'Okay'}]);
+            }
+        } else {
+            Alert.alert('Server error!', 'An error occured while seding email, please try again later!', [
+                {text: 'Okay'}
+            ]);
+        }
+    });
+  };
 };
 
 const signUp = dispatch => {
@@ -82,6 +100,6 @@ const signOut = dispatch => {
 
 export const {AuthProvider, AuthContext} = createDataContext(
   authReducer,
-  {signIn, signOut, signUp},
+  {signIn, signOut, signUp, sendPasswordResetEmail},
   { userToken: null, email: '' },
 );
